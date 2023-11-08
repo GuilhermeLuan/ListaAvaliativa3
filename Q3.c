@@ -10,16 +10,16 @@ void toLowerCase(char *str) {
 }
 
 int main(){
-    char placaCarro[9] = "XX-1111";
-    char diaSemana[14] = "TERCA-FEIRA";
+    char placaCarro[9] = "AAAAA";
+    char diaSemana[14] = "sábado";
     char diaSemanaNaoPermitido[14];
-    char *diasDaSemana[] = {
-            "DOMINGO", "SEGUNDA-FEIRA", "TERÇA-FEIRA",
+    char diasDaSemana[][14] = {
+            "DOMINGO", "SEGUNDA-FEIRA", "TERCA-FEIRA",
             "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SABADO"
     };
     char *contemHifem = strchr(placaCarro, '-');
     int ultimoDigitoPlaca = placaCarro[strlen(placaCarro) - 1] - '0', qtdLetras = 0, qtdNumeros = 0;
-    int placaEhValida, diaEhValido;
+    int placaEhValida = 0, diaEhValido = 0;
 
 
 
@@ -34,18 +34,33 @@ int main(){
 
     //Valida a placa
     if(contemHifem != NULL){ //placa antiga
-        if(qtdLetras != 3 || qtdNumeros != 4){
-            printf("Placa invalida\n");
+        if(qtdLetras == 3 && qtdNumeros == 4){
+            placaEhValida = 1;
         }
     } else{ // placa nova
-        if(qtdLetras != 4 || qtdNumeros != 3){
-            printf("Placa invalida\n");
+        if(qtdLetras == 4 && qtdNumeros == 3){
+            placaEhValida = 1;
         }
     }
 
-    for (int i = 0; i < 6; i++) {
+    //Validação da semana
+    for (int i = 0; i < sizeof(diasDaSemana) / sizeof(diasDaSemana[0]); i++) {
         if (strstr(diaSemana, diasDaSemana[i]) != NULL) {
-            switch (ultimoDigitoPlaca) {
+            diaEhValido = 1;
+        }
+    }
+
+    if(diaEhValido == 0 || placaEhValida == 0){
+        if(placaEhValida == 0){
+            printf("Placa invalida\n");
+        }
+        if(diaEhValido == 0){
+            printf("Dia da semana invalido\n");
+        }
+        return 0;
+    }
+
+    switch (ultimoDigitoPlaca) {
         case 0:
         case 1:
             strcpy(diaSemanaNaoPermitido, diasDaSemana[1]);
@@ -65,11 +80,7 @@ int main(){
         case 8:
         case 9:
             strcpy(diaSemanaNaoPermitido, diasDaSemana[5]);
-            break;}
-        } else if (strstr(diaSemana, diasDaSemana[i]) != NULL){
-            printf("Dia da semana invalido\n");
-            return 0;
-        }
+            break;
     }
 
     if (strcmp(diaSemana, diasDaSemana[0]) == 0 || strcmp(diaSemana, diasDaSemana[6]) == 0){
