@@ -10,19 +10,21 @@ void toLowerCase(char *str) {
 }
 
 int main(){
-    char placaCarro[9] = "AAAAA";
-    char diaSemana[14] = "sábado";
+    char placaCarro[10];
+    char diaSemana[14];
     char diaSemanaNaoPermitido[14];
     char diasDaSemana[][14] = {
             "DOMINGO", "SEGUNDA-FEIRA", "TERCA-FEIRA",
             "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SABADO"
     };
-    char *contemHifem = strchr(placaCarro, '-');
-    int ultimoDigitoPlaca = placaCarro[strlen(placaCarro) - 1] - '0', qtdLetras = 0, qtdNumeros = 0;
     int placaEhValida = 0, diaEhValido = 0;
 
+    fgets(placaCarro, sizeof(placaCarro), stdin);
+    placaCarro[strcspn(placaCarro, "\n")] = '\0';
+    scanf("%s", diaSemana);
 
-
+    char *contemHifem = strchr(placaCarro, '-');
+    int ultimoDigitoPlaca = placaCarro[strlen(placaCarro) - 2] - '0', qtdLetras = 0, qtdNumeros = 0;
     //Conta a qtd de letras e numeros da Placa
     for (int i = 0; i < strlen(placaCarro); ++i) {
         if(isalpha(placaCarro[i])){
