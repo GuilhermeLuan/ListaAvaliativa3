@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 void toLowerCase(char *str) {
     while (*str) {
@@ -9,49 +10,42 @@ void toLowerCase(char *str) {
     }
 }
 
-int main(){
-    char placaCarro[10];
-    char diaSemana[14];
-    char diaSemanaNaoPermitido[14];
-    char diasDaSemana[][14] = {
-            "DOMINGO", "SEGUNDA-FEIRA", "TERCA-FEIRA",
-            "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SABADO"
-    };
-    int placaEhValida = 0, diaEhValido = 0;
+int ultimoDigitoPlaca(char placaCarro[10]){
+    return placaCarro[strlen(placaCarro) - 2] - '0';
+}
 
-    fgets(placaCarro, sizeof(placaCarro), stdin);
-    placaCarro[strcspn(placaCarro, "\n")] = '\0';
-    scanf("%s", diaSemana);
-
-    char *contemHifem = strchr(placaCarro, '-');
-    int ultimoDigitoPlaca = placaCarro[strlen(placaCarro) - 2] - '0', qtdLetras = 0, qtdNumeros = 0;
-    //Conta a qtd de letras e numeros da Placa
+void qtdLetrasNumeros(char placaCarro[10], int* qtdLetras, int* qtdNumeros){
     for (int i = 0; i < strlen(placaCarro); ++i) {
         if(isalpha(placaCarro[i])){
-            qtdLetras++;
+            *qtdLetras = *qtdLetras + 1;
         } if(isdigit(placaCarro[i])){
-            qtdNumeros++;
+            *qtdNumeros = *qtdNumeros + 1;
         }
     }
+}
 
-    //Valida a placa
+void validaPlaca(char placaCarro[10], int qtdLetras, int qtdNumeros, int* placaEhValida){
+    char *contemHifem = strchr(placaCarro, '-');
     if(contemHifem != NULL){ //placa antiga
         if(qtdLetras == 3 && qtdNumeros == 4){
-            placaEhValida = 1;
+            *placaEhValida = 1;
         }
     } else{ // placa nova
         if(qtdLetras == 4 && qtdNumeros == 3){
-            placaEhValida = 1;
+            *placaEhValida = 1;
         }
     }
+}
 
-    //Validação da semana
-    for (int i = 0; i < sizeof(diasDaSemana) / sizeof(diasDaSemana[0]); i++) {
+void validaSemana(char diasDaSemana[][14], char *diaSemana, int *diaEhValido){
+    for (int i = 0; i < 7; i++) {
         if (strstr(diaSemana, diasDaSemana[i]) != NULL) {
-            diaEhValido = 1;
+            *diaEhValido = 1;
         }
     }
+}
 
+void verificaPlacaEDia(int diaEhValido, int placaEhValida){
     if(diaEhValido == 0 || placaEhValida == 0){
         if(placaEhValida == 0){
             printf("Placa invalida\n");
@@ -59,10 +53,34 @@ int main(){
         if(diaEhValido == 0){
             printf("Dia da semana invalido\n");
         }
-        return 0;
+        exit(0);
     }
+}
 
-    switch (ultimoDigitoPlaca) {
+
+int main(){
+    char placaCarro[10], diaSemana[14], diaSemanaNaoPermitido[14];
+    char diasDaSemana[][14] = {
+            "DOMINGO", "SEGUNDA-FEIRA", "TERCA-FEIRA",
+            "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SABADO"
+    };
+    int placaEhValida = 0, diaEhValido = 0, qtdLetras = 0, qtdNumeros = 0;
+
+    fgets(placaCarro, sizeof(placaCarro), stdin);
+    placaCarro[strcspn(placaCarro, "\n")] = '\0';
+    scanf("%s", diaSemana);
+
+
+    qtdLetrasNumeros(placaCarro, &qtdLetras, &qtdNumeros);
+
+    validaPlaca(placaCarro, qtdLetras, qtdNumeros, &placaEhValida);
+
+
+    validaSemana(diasDaSemana, diaSemana, &diaEhValido);
+
+    verificaPlacaEDia(diaEhValido, placaEhValida);
+
+    switch (ultimoDigitoPlaca(placaCarro)) {
         case 0:
         case 1:
             strcpy(diaSemanaNaoPermitido, diasDaSemana[1]);
