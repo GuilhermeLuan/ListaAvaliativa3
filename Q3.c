@@ -26,8 +26,9 @@ void qtdLetrasNumeros(char placaCarro[10], int* qtdLetras, int* qtdNumeros){
 
 void validaPlaca(char placaCarro[10], int qtdLetras, int qtdNumeros, int* placaEhValida){
     char *contemHifem = strchr(placaCarro, '-');
+    //printf("%llu\n", strlen(contemHifem));
     if(contemHifem != NULL){ //placa antiga
-        if(qtdLetras == 3 && qtdNumeros == 4){
+        if(qtdLetras == 3 && qtdNumeros == 4 && strlen(contemHifem) == 5){
             *placaEhValida = 1;
         }
     } else{ // placa nova
