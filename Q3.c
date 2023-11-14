@@ -11,7 +11,7 @@ void toLowerCase(char *str) {
 }
 
 int ultimoDigitoPlaca(char placaCarro[10]){
-    return placaCarro[strlen(placaCarro) - 2] - '0';
+    return placaCarro[strlen(placaCarro) - 1] - '0';
 }
 
 void qtdLetrasNumeros(char placaCarro[10], int* qtdLetras, int* qtdNumeros){
